@@ -15,6 +15,9 @@ def main():
 
     parser.add_argument('filename', nargs='?', default=None,
                         help="file to read")
+    parser.add_argument('-n', '--lines', type=int, default=10,
+                        help="Display the first n lines")
+    
     args = parser.parse_args()
 
     try:
@@ -32,11 +35,9 @@ def main():
 
     output_content = ''
     content_str = content_byte.decode('utf-8').strip().split('\n')
-    for i, line in enumerate(content_str):
-        if i == 10:
-            break;
-        output_content += line + '\n' if i < 9 else line
-        i+=1
+    num_lines = min(args.lines, len(content_str)) 
+    for i, line in enumerate(content_str[:num_lines]):
+        output_content += line + '\n' if i < num_lines-1 else line
 
     print(output_content)
 
