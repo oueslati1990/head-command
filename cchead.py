@@ -58,13 +58,13 @@ def main():
         for name, content in content_dict.items():
             if name != "stdin" and len(content_dict) > 1:
                 output_content += f"==> {name} <==\n"
-            output_content += get_output_bytes(args.bytes, content) + "\n"
+            output_content += get_output_bytes(args.bytes, content) + "\n\n"
         
     elif args.lines:
         for name, content in content_dict.items():
             if name != "stdin" and len(content_dict) > 1:
                 output_content += f"==> {name} <==\n"
-            output_content += get_output_lines(args.lines, content) + "\n"
+            output_content += get_output_lines(args.lines, content) + "\n\n"
 
     print(output_content)
 
