@@ -130,6 +130,58 @@ def test_bytes_count_long_flag():
     print("  ✓ Test passed!")
 
 
+def test_multiple_files_with_lines():
+    """Test multiple files with -n flag"""
+    print("Testing: Multiple files with -n flag")
+
+    stdout, stderr, returncode = run_cchead(['-n', '3', 'test.txt', 'test2.txt'])
+
+    print(f"  Output length: {len(stdout)} chars")
+    print(f"  Errors: {stderr}")
+    print(f"  Return code: {returncode}")
+
+    # Check if command succeeded
+    assert returncode == 0, f"Command failed with errors: {stderr}"
+
+    # Should have headers for both files
+    assert "==> test.txt <==" in stdout, "Expected header for test.txt"
+    assert "==> test2.txt <==" in stdout, "Expected header for test2.txt"
+
+    # Should have content from both files
+    assert "The Project Gutenberg eBook" in stdout, "Expected content from test.txt"
+    assert "Hello, world!" in stdout, "Expected content from test2.txt"
+
+    print("  ✓ Test passed!")
+
+
+def test_multiple_files_with_bytes():
+    """Test multiple files with -c flag"""
+    print("Testing: Multiple files with -c flag")
+
+    cmd = ['cchead', '-c', '30', 'test.txt', 'test2.txt']
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    stdout = result.stdout
+    stderr = result.stderr.strip()
+    returncode = result.returncode
+
+    print(f"  Output length: {len(stdout)} chars")
+    print(f"  Errors: {stderr}")
+    print(f"  Return code: {returncode}")
+
+    # Check if command succeeded
+    assert returncode == 0, f"Command failed with errors: {stderr}"
+
+    # Should have headers for both files
+    assert "==> test.txt <==" in stdout, "Expected header for test.txt"
+    assert "==> test2.txt <==" in stdout, "Expected header for test2.txt"
+
+    # Should have content from both files
+    assert "The Project Gutenberg" in stdout, "Expected content from test.txt"
+    assert "Hello, world!" in stdout, "Expected content from test2.txt"
+
+    print("  ✓ Test passed!")
+
+
 if __name__ == '__main__':
     print("=" * 50)
     print("Testing cchead - Line and Byte Display Features")
@@ -143,6 +195,10 @@ if __name__ == '__main__':
         test_bytes_count_short_flag()
         print()
         test_bytes_count_long_flag()
+        print()
+        test_multiple_files_with_lines()
+        print()
+        test_multiple_files_with_bytes()
         print()
         print("✓ All tests passed!")
     except AssertionError as e:
