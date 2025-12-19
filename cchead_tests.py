@@ -70,15 +70,79 @@ def test_lines_count_long_flag():
     print("  ✓ Test passed!")
 
 
+def test_bytes_count_short_flag():
+    """Test -c flag for custom byte count"""
+    print("Testing: Custom byte count with -c flag")
+
+    # For byte count tests, we need the raw output without stripping
+    cmd = ['cchead', '-c', '50', 'test.txt']
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    stdout_raw = result.stdout
+    stderr = result.stderr.strip()
+    returncode = result.returncode
+
+    print(f"  Output: {stdout_raw.strip()}")
+    print(f"  Errors: {stderr}")
+    print(f"  Return code: {returncode}")
+
+    # Check if command succeeded
+    assert returncode == 0, f"Command failed with errors: {stderr}"
+
+    # Check byte count in raw output (before stripping)
+    # The output includes the 50 bytes from file plus "\n\n" added by cchead
+    byte_count = len(stdout_raw.encode('utf-8'))
+
+    print(f"  Bytes displayed (total): {byte_count}")
+
+    # Should display 50 bytes from file + 3 bytes for extra newlines = 53 bytes
+    assert byte_count == 53, f"Expected 53 bytes, got {byte_count}"
+
+    print("  ✓ Test passed!")
+
+
+def test_bytes_count_long_flag():
+    """Test --bytes flag for custom byte count"""
+    print("Testing: Custom byte count with --bytes flag")
+
+    # For byte count tests, we need the raw output without stripping
+    cmd = ['cchead', '--bytes', '100', 'test.txt']
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    stdout_raw = result.stdout
+    stderr = result.stderr.strip()
+    returncode = result.returncode
+
+    print(f"  Output: {stdout_raw.strip()[:80]}...")
+    print(f"  Errors: {stderr}")
+    print(f"  Return code: {returncode}")
+
+    # Check if command succeeded
+    assert returncode == 0, f"Command failed with errors: {stderr}"
+
+    # Check byte count in raw output (before stripping)
+    # The output includes the 100 bytes from file plus "\n\n" added by cchead
+    byte_count = len(stdout_raw.encode('utf-8'))
+
+    print(f"  Bytes displayed (total): {byte_count}")
+
+    # Should display 100 bytes from file + 3 bytes for extra newlines = 103 bytes
+    assert byte_count == 103, f"Expected 103 bytes, got {byte_count}"
+
+    print("  ✓ Test passed!")
+
+
 if __name__ == '__main__':
     print("=" * 50)
-    print("Testing cchead - Line Display Feature")
+    print("Testing cchead - Line and Byte Display Features")
     print("=" * 50)
 
     try:
         test_lines_count_short_flag()
         print()
         test_lines_count_long_flag()
+        print()
+        test_bytes_count_short_flag()
+        print()
+        test_bytes_count_long_flag()
         print()
         print("✓ All tests passed!")
     except AssertionError as e:
