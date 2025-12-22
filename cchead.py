@@ -47,10 +47,13 @@ def main():
             content_dict["stdin"] = sys.stdin.buffer.read().decode('utf-8')
     except FileNotFoundError:
         print(f'file {f} does not exist', file=sys.stderr)
-        exit(1)
+        sys.exit(1)
     except PermissionError:
         print(f'You are not permitted to access this file {f}', file=sys.stderr)
-        exit(1) 
+        sys.exit(1)
+    except IOError as e:
+        print(f"{args.filename}: {e}", file=sys.stderr)
+        sys.exit(1) 
 
     output_content = ''
         
